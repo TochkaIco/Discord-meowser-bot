@@ -27,6 +27,6 @@ async def on_message(message):
         return
 
     if ("cat" in message.content.lower()) or ("furry" in message.content.lower()):
-        await message.channel.send("meow-mror-mrpppppp >:3")
+        await message.channel.send(random_meow())
 
 client.run(TOKEN)
