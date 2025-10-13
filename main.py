@@ -10,10 +10,6 @@ load_dotenv()
 TOKEN = os.getenv("BOT_TOKEN")
 arch_site = """Just go and install Arch ISO already :<
 \nhttps://archlinux.org/"""
-responses = [
-    f"{interaction.user.mention} bites {target.mention}",
-    f"{interaction.user.mention} chomps on {target.mention}",
-]
 gif_bites = [
     "https://tenor.com/view/chomp-bite-arm-gif-7083692912057941766",
     "https://tenor.com/view/mikisi-kisi-kiss-gif-27218966",
@@ -48,6 +44,10 @@ async def on_message(message):
 @bot.tree.command(name="bite", description="Bite someone!")
 @app_commands.describe(target="The user you want to bite")
 async def bite(interaction: discord.Interaction, target: discord.User):
+    responses = [
+        f"{interaction.user.mention} bites {target.mention}",
+        f"{interaction.user.mention} chomps on {target.mention}",
+    ]
     if target == interaction.user:
         await interaction.response.send_message("You can’t bite yourself! 🫢", ephemeral=True)
         return
