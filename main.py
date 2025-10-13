@@ -8,7 +8,11 @@ TOKEN = os.getenv("BOT_TOKEN")
 
 def random_meow():
     meow_list = ["meow-mror-mrppppp :333333", "meow~", "-# mwow~", "meowieeeeeeeeeeeee :>", "mreowiehehe >:3"]
+<<<<<<< HEAD
     i = randint(0, len(meow_list) - 1)
+=======
+    i = randint(0, (len(meow_list) - 1))
+>>>>>>> 0ab67cc (Initial commit n2)
     return meow_list[i]
 
 # Intents are required for message content
