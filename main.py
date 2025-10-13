@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 TOKEN = os.getenv("BOT_TOKEN")
+arch_site = """Just go and install Arch ISO already :<
+\nhttps://archlinux.org/"""
 
 def random_meow():
     meow_list = ["meow-mror-mrppppp :333333", "meow~", "-# mwow~", "meowieeeeeeeeeeeee :>", "mreowiehehe >:3"]
@@ -32,5 +34,7 @@ async def on_message(message):
 
     if ("cat" in message.content.lower()) or ("furry" in message.content.lower()):
         await message.channel.send(random_meow())
+    if "arch" in message.content.lower():
+        await message.channel.send(arch_site)
 
 client.run(TOKEN)
