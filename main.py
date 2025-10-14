@@ -18,8 +18,9 @@ gif_bites = [
 
 def random_meow():
     meow_list = ["meow-mror-mrppppp :333333", "meow~", "-# mwow~", "meowieeeeeeeeeeeee :>", "mreowiehehe >:3"]
-    i = randint(0, (len(meow_list) - 1))
-    return meow_list[i]
+    return random.choice(meow_list)
+def random_gif():
+    return random.choice(gif_bites)
 
 # Intents are required for message content
 intents = discord.Intents.default()
@@ -30,6 +31,12 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}!')
+    try:
+        synced = await bot.tree.sync()
+        print(f"Synced {len(synced)} commands.")
+    except Exception as e:
+        print(e)
+
 
 @bot.event
 async def on_message(message):
@@ -40,9 +47,9 @@ async def on_message(message):
         await message.channel.send(random_meow())
     if "arch" in message.content.lower():
         await message.channel.send(arch_site)
+    await bot.process_commands(message)
 
 @bot.tree.command(name="bite", description="Bite someone!")
-@app_commands.describe(target="The user you want to bite")
 async def bite(interaction: discord.Interaction, target: discord.User):
     responses = [
         f"{interaction.user.mention} bites {target.mention}",
@@ -52,7 +59,7 @@ async def bite(interaction: discord.Interaction, target: discord.User):
         await interaction.response.send_message("You can’t bite yourself! 🫢", ephemeral=True)
         return
     embed = discord.Embed(description=random.choice(responses), color=discord.Color.red())
-    embed.set_image(random.choice(gif_bites))
+    embed.set_image(url=random_gif())
     await interaction.response.send_message(embed=embed)
 
 bot.run(TOKEN)
