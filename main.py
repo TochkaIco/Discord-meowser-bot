@@ -31,9 +31,9 @@ def random_meow():
         "meowieeeeeeeeeeeee :>",
         "mreowiehehe >:3",
         "nom ^.^",
-        "*Duddenly feel like biting\*",
+        "*Suddenly feel like biting\*",
         "Did somebody say my name? >:3",
-        "Imma bite the @HatesFurries :<",
+        "Imma bite the <@&1413982969093161070> :<",
         "We live in a twilight world...and?",
         "I have been summoned!",
 ]
