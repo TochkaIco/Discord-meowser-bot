@@ -10,6 +10,13 @@ load_dotenv()
 TOKEN = os.getenv("BOT_TOKEN")
 arch_site = """Just go and install Arch ISO already :<
 \nhttps://archlinux.org/"""
+trigger_messages = [
+    "cat",
+    "car",
+    "kitty",
+    "furry",
+    "furries",
+]
 gif_bites = [
     "https://tenor.com/view/chomp-bite-arm-gif-7083692912057941766",
     "https://tenor.com/view/mikisi-kisi-kiss-gif-27218966",
@@ -17,7 +24,19 @@ gif_bites = [
 ]
 
 def random_meow():
-    meow_list = ["meow-mror-mrppppp :333333", "meow~", "-# mwow~", "meowieeeeeeeeeeeee :>", "mreowiehehe >:3"]
+    meow_list = [
+        "meow-mror-mrppppp :333333",
+        "meow~",
+        "-# mwow~",
+        "meowieeeeeeeeeeeee :>",
+        "mreowiehehe >:3",
+        "nom ^.^",
+        "*Duddenly feel like biting\*",
+        "Did somebody say my name? >:3",
+        "Imma bite the @HatesFurries :<",
+        "We live in a twilight world...and?",
+        "I have been summoned!",
+]
     return random.choice(meow_list)
 def random_gif():
     return random.choice(gif_bites)
@@ -42,9 +61,9 @@ async def on_ready():
 async def on_message(message):
     if message.author == bot.user:
         return
-
-    if ("cat" in message.content.lower()) or ("furry" in message.content.lower()):
-        await message.channel.send(random_meow())
+    for unit in trigger_messages:
+        if unit in message.content.lower():
+            await message.channel.send(random_meow())
     if "arch" in message.content.lower():
         await message.channel.send(arch_site)
     await bot.process_commands(message)
