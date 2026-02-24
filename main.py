@@ -8,8 +8,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 TOKEN = os.getenv("BOT_TOKEN")
-arch_site = """Just go and install Arch ISO already :<
-\nhttps://archlinux.org/"""
+# arch_site = """Just go and install Arch ISO already :<
+# \nhttps://archlinux.org/"""
 trigger_messages = [
     "cat",
     "car",
@@ -64,8 +64,8 @@ async def on_message(message):
     for unit in trigger_messages:
         if unit in message.content.lower():
             await message.channel.send(random_meow())
-    if "arch" in message.content.lower():
-        await message.channel.send(arch_site)
+    # if "arch" in message.content.lower():
+    #     await message.channel.send(arch_site)
     await bot.process_commands(message)
 
 @bot.tree.command(name="bite", description="Bite someone!")
