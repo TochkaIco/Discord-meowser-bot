@@ -18,9 +18,9 @@ trigger_messages = [
     "furries",
 ]
 gif_bites = [
-    "https://tenor.com/view/chomp-bite-arm-gif-7083692912057941766",
-    "https://tenor.com/view/mikisi-kisi-kiss-gif-27218966",
-    "https://tenor.com/view/slow-cat-bite-cat-bite-slow-gif-26064423",
+    "https://tenor.com/view/chomp-bite-arm-gif-7083692912057941766.gif",
+    "https://tenor.com/view/mikisi-kisi-kiss-gif-27218966.gif",
+    "https://tenor.com/view/slow-cat-bite-cat-bite-slow-gif-26064423.gif",
 ]
 
 def random_meow():
@@ -70,15 +70,27 @@ async def on_message(message):
 
 @bot.tree.command(name="bite", description="Bite someone!")
 async def bite(interaction: discord.Interaction, target: discord.User):
+    # 1. Check self-bite immediately (this is fast)
+    if target == interaction.user:
+        return await interaction.response.send_message("You can’t bite yourself! 🫢", ephemeral=True)
+
+    # 2. Defer the interaction. This buys you 15 minutes.
+    # We use thinking=False so the "Bot is thinking..." message is cleaner.
+    await interaction.response.defer()
+
     responses = [
         f"{interaction.user.mention} bites {target.mention}",
         f"{interaction.user.mention} chomps on {target.mention}",
     ]
-    if target == interaction.user:
-        await interaction.response.send_message("You can’t bite yourself! 🫢", ephemeral=True)
-        return
+
+    # 3. Perform your logic (even if random_gif takes 4 seconds, you're safe now)
     embed = discord.Embed(description=random.choice(responses), color=discord.Color.red())
-    embed.set_image(url=random_gif())
-    await interaction.response.send_message(embed=embed)
+    
+    # If random_gif is an async function, remember to 'await' it!
+    gif_url = random_gif() 
+    embed.set_image(url=gif_url)
+
+    # 4. Use followups to send the final message after deferring
+    await interaction.followup.send(embed=embed)
 
 bot.run(TOKEN)
