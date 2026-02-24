@@ -13,9 +13,9 @@ trigger_messages = ["cat", "car", "kitty", "furry", "furries"]
 
 # Direct .gif links are required for embeds to display them properly
 gif_bites = [
-    "https://media1.tenor.com/m/7083692912057941766/chomp-bite.gif",
-    "https://media1.tenor.com/m/27218966/mikisi-kisi-kiss.gif",
-    "https://media1.tenor.com/m/26064423/slow-cat-bite.gif",
+    "https://media1.tenor.com/m/Yk5VLCkqfwYAAAAd/chomp-bite-arm.gif",
+    "https://media1.tenor.com/m/J-d8KHJfE9kAAAAd/mikisi-kisi.gif",
+    "https://media1.tenor.com/m/4nSJ7HPC6rQAAAAd/slow-cat-bite-cat-bite-slow.gif",
 ]
 
 def random_meow():
