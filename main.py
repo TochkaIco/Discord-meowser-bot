@@ -3,24 +3,19 @@ from discord import app_commands
 from discord.ext import commands
 import os
 import random
-from random import randint
 from dotenv import load_dotenv
 
+# --- Setup and Config ---
 load_dotenv()
 TOKEN = os.getenv("BOT_TOKEN")
-# arch_site = """Just go and install Arch ISO already :<
-# \nhttps://archlinux.org/"""
-trigger_messages = [
-    "cat",
-    "car",
-    "kitty",
-    "furry",
-    "furries",
-]
+
+trigger_messages = ["cat", "car", "kitty", "furry", "furries"]
+
+# Direct .gif links are required for embeds to display them properly
 gif_bites = [
-    "https://tenor.com/view/chomp-bite-arm-gif-7083692912057941766.gif",
-    "https://tenor.com/view/mikisi-kisi-kiss-gif-27218966.gif",
-    "https://tenor.com/view/slow-cat-bite-cat-bite-slow-gif-26064423.gif",
+    "https://media1.tenor.com/m/7083692912057941766/chomp-bite.gif",
+    "https://media1.tenor.com/m/27218966/mikisi-kisi-kiss.gif",
+    "https://media1.tenor.com/m/26064423/slow-cat-bite.gif",
 ]
 
 def random_meow():
@@ -31,17 +26,18 @@ def random_meow():
         "meowieeeeeeeeeeeee :>",
         "mreowiehehe >:3",
         "nom ^.^",
-        "*Suddenly feel like biting\*",
+        "*Suddenly feel like biting*",
         "Did somebody say my name? >:3",
         "Imma bite the <@&1413982969093161070> :<",
         "We live in a twilight world...and?",
         "I have been summoned!",
-]
+    ]
     return random.choice(meow_list)
+
 def random_gif():
     return random.choice(gif_bites)
 
-# Intents are required for message content
+# --- Bot Initialization ---
 intents = discord.Intents.default()
 intents.message_content = True
 
@@ -52,45 +48,59 @@ async def on_ready():
     print(f'Logged in as {bot.user}!')
     try:
         synced = await bot.tree.sync()
-        print(f"Synced {len(synced)} commands.")
+        print(f"Synced {len(synced)} slash commands.")
     except Exception as e:
-        print(e)
+        print(f"Failed to sync commands: {e}")
 
-
+# --- Events ---
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
         return
+
+    # Check for keywords and meow once per message
+    msg_lower = message.content.lower()
     for unit in trigger_messages:
-        if unit in message.content.lower():
+        if unit in msg_lower:
             await message.channel.send(random_meow())
-    # if "arch" in message.content.lower():
-    #     await message.channel.send(arch_site)
+            break 
+
     await bot.process_commands(message)
 
+# --- Slash Commands ---
 @bot.tree.command(name="bite", description="Bite someone!")
+@app_commands.describe(target="The user you want to chomp")
 async def bite(interaction: discord.Interaction, target: discord.User):
-    # 1. Check self-bite immediately (this is fast)
+    # 1. Immediate check: If user bites themselves, send ephemeral message and stop.
     if target == interaction.user:
-        return await interaction.response.send_message("You can’t bite yourself! 🫢", ephemeral=True)
+        return await interaction.response.send_message(
+            "You can’t bite yourself! 🫢", 
+            ephemeral=True
+        )
 
-    # 2. Defer the interaction. This buys you 15 minutes.
-    # We use thinking=False so the "Bot is thinking..." message is cleaner.
+    # 2. Defer immediately: This tells Discord to wait up to 15 mins.
+    # This prevents the "Unknown Interaction" 404 error.
     await interaction.response.defer()
 
-    responses = [
-        f"{interaction.user.mention} bites {target.mention}",
-        f"{interaction.user.mention} chomps on {target.mention}",
-    ]
+    try:
+        responses = [
+            f"{interaction.user.mention} bites {target.mention}",
+            f"{interaction.user.mention} chomps on {target.mention}",
+        ]
 
-    # 3. Perform your logic (even if random_gif takes 4 seconds, you're safe now)
-    embed = discord.Embed(description=random.choice(responses), color=discord.Color.red())
-    
-    # If random_gif is an async function, remember to 'await' it!
-    gif_url = random_gif() 
-    embed.set_image(url=gif_url)
+        embed = discord.Embed(
+            description=random.choice(responses), 
+            color=discord.Color.red()
+        )
+        embed.set_image(url=random_gif())
 
-    # 4. Use followups to send the final message after deferring
-    await interaction.followup.send(embed=embed)
+        # 3. Use followup.send because we already deferred the response.
+        await interaction.followup.send(embed=embed)
+        
+    except Exception as e:
+        print(f"Error in bite command: {e}")
+        # If something fails, let the user know since we already deferred
+        await interaction.followup.send("Something went wrong while trying to bite!", ephemeral=True)
 
+# --- Run ---
 bot.run(TOKEN)
