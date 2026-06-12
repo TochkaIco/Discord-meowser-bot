@@ -8,3 +8,4 @@ services:
       - .env
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
+      - TEACHGPT_API_KEY=${TEACHGPT_API_KEY}
