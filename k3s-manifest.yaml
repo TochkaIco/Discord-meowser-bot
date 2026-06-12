@@ -23,5 +23,4 @@ spec:
           valueFrom:
             secretKeyRef:
               name: meowser-bot-secret
-              key: BOT_TOKEN
       restartPolicy: Always
