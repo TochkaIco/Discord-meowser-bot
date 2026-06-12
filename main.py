@@ -39,7 +39,6 @@ def random_meow():
 def random_gif():
     return random.choice(gif_bites)
 
-
 def get_teachgpt_response():
     url = "https://teachgpt-teachgpt-test.apps.okd.ssis.nu/api/v1/chat/completions"
     headers = {
@@ -53,9 +52,8 @@ def get_teachgpt_response():
             {
                 "role": "system",
                 "content": (
-                    "You are a chaotic discord bot assistant. Flip a coin mentally. "
-                    "50% of the time, respond entirely as a cute/chaotic cat using lots of meows, purrs, and emojis. "
-                    "The other 50% of the time, tell a random, genuinely interesting or niche fact about Kubernetes (k8s). "
+                    "You are a chaotic discord cat assistant. "
+                    "Tell a random, genuinely interesting or niche fact about Kubernetes (k8s). "
                     "Keep your response concise, under 3 short sentences."
                 )
             },
@@ -100,34 +98,34 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
+    # Check if the message is a valid command first
+    ctx = await bot.get_context(message)
+    if ctx.valid:
+        await bot.invoke(ctx)
+        return  # Exit so we don't trigger the cat loop for commands
+
+    # Trigger logic only for normal chat
     msg_lower = message.content.lower()
     for unit in trigger_messages:
         if unit in msg_lower:
             # 50% chance to fetch from TeachGPT API
             if random.random() < 0.5:
-                # Triggers the native visual "Bot is typing..." feedback
                 async with message.channel.typing():
-                    # Runs the blocking request code off the main loop to keep bot fast
                     api_response = await asyncio.to_thread(get_teachgpt_response)
 
                 if api_response:
                     await message.reply(api_response)
                 else:
-                    # Fallback to local meows if API errors out
                     await message.reply(random_meow())
             else:
-                # The remaining 50% of the time, pull directly from the local list
                 await message.reply(random_meow())
             break
-
-    await bot.process_commands(message)
 
 
 # --- Slash Commands ---
 @bot.tree.command(name="bite", description="Bite someone!")
 @app_commands.describe(target="The user you want to chomp")
 async def bite(interaction: discord.Interaction, target: discord.User):
-    # 1. Validation check
     if target == interaction.user:
         return await interaction.response.send_message(
             "You can’t bite yourself! 🫢",
