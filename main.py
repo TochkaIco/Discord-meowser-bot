@@ -48,7 +48,7 @@ def get_teachgpt_response():
     }
 
     data = {
-        "model": "gpt-oss-120b-medium",
+        "model": "Meta-Llama-3.3-70B-Instruct-AWQ",
         "messages": [
             {
                 "role": "system",
