@@ -19,7 +19,14 @@ spec:
         image: tochkaico/discord-meowser-bot:latest
         imagePullPolicy: Always
         env:
+        - name: BOT_TOKEN
           valueFrom:
             secretKeyRef:
               name: meowser-bot-secret
+              key: BOT_TOKEN
+        - name: TEACHGPT_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: meowser-bot-secret
+              key: TEACHGPT_API_KEY
       restartPolicy: Always
