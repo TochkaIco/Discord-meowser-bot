@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discord-meowser-bot
+  labels:
+    app: meowser-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: meowser-bot
+  template:
+    metadata:
+      labels:
+        app: meowser-bot
+    spec:
+      containers:
+      - name: bot
+        image: tochkaico/discord-meowser-bot:latest
+        imagePullPolicy: Always
+        env:
+        - name: BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: meowser-bot-secret
+              key: BOT_TOKEN
+      restartPolicy: Always
