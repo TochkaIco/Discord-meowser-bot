@@ -19,7 +19,6 @@ spec:
         image: tochkaico/discord-meowser-bot:latest
         imagePullPolicy: Always
         env:
-        - name: BOT_TOKEN
           valueFrom:
             secretKeyRef:
               name: meowser-bot-secret
