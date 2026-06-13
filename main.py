@@ -36,9 +36,20 @@ try:
     def get_teachgpt_response():
         url = "https://teachgpt-teachgpt-test.apps.okd.ssis.nu/api/v1/chat/completions"
         headers = {"Authorization": f"Bearer {TEACHGPT_API_KEY}", "Content-Type": "application/json"}
+        topics = ["Kubernetes internals", "Git commands", "Architecture in system design", "Advantages/Disadvantages of Laravel", "Docker commands", "Docker networking", "Linux kernel"]
+        selected_topic = random.choice(topics)
         data = {
             "model": "Meta-Llama-3.3-70B-Instruct-AWQ",
-            "messages": [{"role": "system", "content": "Keep it short."}, {"role": "user", "content": "Cat fact!"}]
+            "messages": [
+                {
+                    "role": "system",
+                    "content": f"You are a quirky cat. Provide a very obscure, advanced, or surprising fact about {selected_topic}. Avoid common knowledge. Be concise."
+                },
+                {"role": "user", "content": "Meow! Give me a secret dev tip!"}
+            ],
+            "temperature": 0.9,
+            "frequency_penalty": 1.2,
+            "presence_penalty": 0.5
         }
         try:
             r = requests.post(url, headers=headers, json=data, timeout=5)
